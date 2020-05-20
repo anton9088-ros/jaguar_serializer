@@ -175,6 +175,9 @@ class AnnotationParser {
           ?.constantValue;
       if (annot == null) {
         FieldElement fe = modelClass.getField(name);
+        if (fe == null && modelClass.supertype != null) {
+          fe = modelClass.supertype.element.getField(name);
+        }
         if (fe != null) {
           for (ElementAnnotation ea in fe.metadata) {
             ParameterizedType eae = ea.computeConstantValue().type;
