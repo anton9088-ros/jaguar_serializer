@@ -175,8 +175,14 @@ class AnnotationParser {
           ?.constantValue;
       if (annot == null) {
         FieldElement fe = modelClass.getField(name);
-        if (fe == null && modelClass.supertype != null) {
-          fe = modelClass.supertype.element.getField(name);
+        if (fe == null) {
+          InterfaceType superClass = modelClass.type;
+          while ((superClass = superClass.superclass) != null) {
+            fe = superClass.element.getField(name);
+            if (fe != null) {
+              break;
+            }
+          }
         }
         if (fe != null) {
           for (ElementAnnotation ea in fe.metadata) {
